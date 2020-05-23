@@ -23,6 +23,8 @@ MySQL Workbench Download: https://dev.mysql.com/downloads/workbench/
 
 You must download the application from the above GitHub link. Once downloaded, you must open the file directory where the server.js file resides and open a CLI window. Run "npm i" in the CLI window to install the dependencies. You will also need to have MySQL Workbench installed in order to create the database you will need for the application. There is a link in the Links section to download MySQL Workbench. Once Workbench is installed, use the copy and paste the schema.sql code into your localhost and run it.
 
+Finally, you will need to update the ".env.sample" file with your MySQL password and change the file name to ".env".
+
 After all dependencies have been installed, simply run "node server.js" to use the application.
 
 ## Usage:
@@ -47,7 +49,8 @@ N/A
 N/A
 
 ## FAQs:
-N/A
+Q: What is it supposed to look like when there are things in the database?
+A: You can use the "seeds.sql" file code in Workbench as a demo to see what it looks like with content. You can also re-run the "schema.sql" file code again to reset the database after words if you want to start clean again.
 
 ## Contact:
 N/A
