@@ -23,6 +23,7 @@ function mainMenu () {
     return inquirer.prompt ([
 
         {
+
             type:"rawlist",
             name:"mainMenu",
             message:"Employee Management Tool Main Menu",
@@ -34,7 +35,8 @@ function mainMenu () {
                      "View All Employees", 
                      "Update Employee",
                      "Exit"
-            ]
+                    ]
+
         }
 
     ]).then(function (data, err) {
@@ -48,7 +50,7 @@ function mainMenu () {
         }
 
         if (data.mainMenu === "Create New Employee") {
-            newEmp()
+            // newEmp()
         }
 
         if (data.mainMenu === "View All Deparements") {
@@ -64,7 +66,7 @@ function mainMenu () {
         }
 
         if (data.mainMenu === "Update Employee") {
-            updateEmp()
+            // updateEmp()
         }
 
         if (data.mainMenu === "Exit") {
@@ -75,7 +77,9 @@ function mainMenu () {
 
     })
 
-}
+};
+
+// Creates new Departments.
 
 function newDept () {
 
@@ -89,27 +93,75 @@ function newDept () {
 
     ]).then(function (data, err) {
 
+        if (err) throw err;
+
         var query = connection.query(
 
-            "INSERT INTO department SET ?", {name: data.newDept}, function(err, res) {
+            "INSERT INTO department (name) VALUES (?)", [data.newDept], function(err, res) {
 
-              if (err) throw err;
+                if (err) throw err;
+
+                console.log("Deparetment Added.")
+
+                turnBack()
 
             }
 
         );
 
         console.log(query.sql);
-        
-        console.log("Deparetment Added.")
-
-        if (err) throw err;
-
-        mainMenu()
 
     })
 
-}
+};
+
+// Creates new positions in departments.
+
+function newRole () {
+
+    return inquirer.prompt([
+
+        {
+            type:"input",
+            name:"newRole",
+            message: "What is the title of the New Position? (30 Characters Max)"
+        },
+        {
+            type:"input",
+            name:"salary",
+            message: "What is the salary of the New Position? (Numbers Only, No Punctuation)"
+        },
+        {
+            type:"input",
+            name:"deptId",
+            message: "What is the department ID that the New Position belongs to? (If Unknown, View Departments from the Main Menu.)"
+        }
+
+    ]).then(function (data, err) {
+
+        if (err) throw err;
+
+        var query = connection.query(
+
+            "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [data.newRole, data.salary, data.deptId], function(err, res) {
+
+                if (err) throw err;
+
+                console.log("Position Added.")
+
+                turnBack()
+
+            }
+
+        );
+
+        console.log(query.sql);
+
+    })
+
+};
+
+// View all Departments
 
 function viewDepts () {
 
@@ -120,12 +172,83 @@ function viewDepts () {
         
         console.log(res);
 
+        turnBack()
+
     })
 
-    mainMenu()
+};
 
-}
+// View all Roles
+
+function viewRoles () {
+
+    
+    connection.query("SELECT * FROM role", function(err, res) {
+
+        if (err) throw err;
+        
+        console.log(res);
+
+        turnBack()
+
+    })
+
+};
+
+// View all Employees
+
+function viewEmps () {
+
+    
+    connection.query("SELECT * FROM employee", function(err, res) {
+
+        if (err) throw err;
+        
+        console.log(res);
+
+        turnBack()
+
+    })
+
+};
+
+// Returns to the main menu or exits the application
+
+function turnBack () {
+
+    return inquirer.prompt ([
+
+        {
+            
+            type:"rawlist",
+            name:"back",
+            message:"Back or Exit?",
+            choices:["Back", "Exit"]
+
+        }
+
+    ]).then(function (data, err) {
+
+        if (err) throw err;
+        
+        if (data.back === "Back") {
+
+            mainMenu()
+
+        }
+
+        if (data.back === "Exit") {
+
+            endOfLine()
+            
+        }
+
+    })
+
+};
+
+// Exits the application
 
 function endOfLine () {
     connection.end()
-}
+};
